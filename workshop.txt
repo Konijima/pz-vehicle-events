@@ -1,0 +1,32 @@
+version=1
+title=Vehicle Events API
+description=[h1]Vehicle Events API[/h1]
+description=A mod for modders. The game does many car things without telling Lua: pressing W starts the engine, an engine stalls, an alarm goes off. This mod fires an event when that happens.
+description=
+description=[h2]For players[/h2]
+description=Does nothing on its own. Install it when another mod needs it.
+description=
+description=[h2]For modders[/h2]
+description=[code]Events.VehicleEvents_OnPlayerVehicleEngineStarted.Add(myFunction)[/code]
+description=[list]
+description=[*] [b]VehicleEvents_OnPlayerVehicle...[/b]: the car a player sits in. Single player and multiplayer clients. Not on the server.
+description=[*] [b]VehicleEvents_OnVehicle...[/b]: every loaded car, even empty. Single player and the server. Not on multiplayer clients.
+description=[*] Gear, reversing, keys, cruise control, horn and offroad are player events only.
+description=[*] Occupied or empty, first time opened and unloaded are world events only.
+description=[*] Seat events: Entered, Exited and SeatChanged, with the seat number (0 = driver).
+description=[*] Part events: door, trunk and hood opened or closed, locked or unlocked, windows opened, closed, smashed or repaired, tires flat or inflated, parts installed or removed, part condition.
+description=[*] Unload event: a car unloaded. For a car loaded, use vanilla OnSpawnVehicleEnd.
+description=[/list]
+description=Car events: engine started or stopped, engine state, fuel (empty or low), battery (dead or low), broke down, moving or stopped, flipped, gear, reversing, cruise control, offroad, headlights, police lights, heater, radio, siren, horn, alarm, keys, hotwire, door and trunk locks, tires, towing, occupied or empty, first time opened, cargo, trailer animals.
+description=
+description=You can add your own events too. See the README for details.
+description=
+description=[h2]Good to know[/h2]
+description=[list]
+description=[*] Put it on the server (Mods= and WorkshopItems=).
+description=[*] Sandbox options on the Vehicle Events API page: low fuel and battery thresholds, flipped angle, world check speed.
+description=[*] Safe to add or remove mid-save.
+description=[*] Build 42 only.
+description=[/list]
+tags=Build 42;Framework;Multiplayer;Vehicles
+visibility=public

@@ -1,0 +1,28 @@
+Vehicle Events API, a Project Zomboid mod
+Copyright (c) 2026 Konijima. All rights reserved.
+
+This repository is published so that players can read how the mod works and
+so that people can help improve it. It is not free software.
+
+You may:
+- clone this repository, read it, build it and play with it on your own
+  machines and servers;
+- open issues, and send changes as pull requests from a fork of this
+  repository, which is the only distribution of a modified copy that is
+  allowed.
+
+You may not, without written permission from the author:
+- redistribute this mod or any modified version of it, including uploading it
+  or a derivative to the Steam Workshop or any other service;
+- sell it or include it in a paid product;
+- use its name, logo or art for another project.
+
+By sending a pull request you grant the author a perpetual, irrevocable,
+royalty-free right to use, modify and distribute your contribution as part of
+this mod, under this licence or any licence the author later chooses for it.
+You keep the copyright on what you wrote.
+
+The Project Zomboid game assets this mod refers to belong to The Indie Stone
+and are not part of this work.
+
+Contact: https://github.com/Konijima/pz-car-key-names-fix
