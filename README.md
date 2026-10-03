@@ -1,436 +1,359 @@
 # Vehicle Events API
 
-> **Lua events for everything cars do.** A Project Zomboid (Build 42) mod for
-> modders. Mod ID `VehicleEvents`.
-
-The game does a lot of car things without telling Lua. Pressing W starts the
-engine, an engine stalls, an alarm goes off, a door opens: no event fires.
-This mod watches cars and fires an event when something changes.
-
-**Tested in game, every event, in single player and multiplayer** (client and
-dedicated server, Build 42.21.0). See [Tested](#tested).
-
-**Contents**
-
-1. [Quick start](#quick-start)
-2. [Client or server?](#client-or-server)
-3. [Parameters](#parameters)
-4. [Event list](#event-list)
-5. [Good to know](#good-to-know)
-6. [Vanilla events you can still use](#vanilla-events-you-can-still-use)
-7. [Make your own events](#make-your-own-events)
-8. [Settings](#settings)
-9. [Tested](#tested)
+*Lua events for everything cars do in Project Zomboid, Build 42.*
 
 ---
 
-## Quick start
+Cars in Project Zomboid live a quiet life. A player presses W and the engine
+turns over. An engine coughs and dies on an empty tank. A window shatters, an
+alarm starts to wail, a trailer is hooked up behind a pickup. All of it happens
+in the game's Java code, and Lua is told none of it.
 
-### 1. Depend on the mod, don't copy it
+This mod listens for you. It watches the cars, notices when something about
+them changes, and fires an event your mod can hook into, the same way you hook
+into any other game event.
 
-Players need **Vehicle Events API** installed next to your mod. Don't put its
-files inside your own mod: two copies of the same file fight each other, and
-your copy stops getting fixes.
+It is tested in the real game, every event, in single player and in
+multiplayer on a dedicated server ([how](#how-it-was-tested)).
 
-1. In your `mod.info`, add the requirement. The game then refuses to load your
-   mod without it, and loads it first:
+Mod ID: `VehicleEvents`.
 
-   ```
-   require=\VehicleEvents
-   ```
+---
 
-   Several mods: `require=\VehicleEvents,\OtherMod`.
+## Getting started
 
-2. On your Steam Workshop page, add it as a **Required item**: *Add/Remove
-   Required Items* in the page's owner controls, then pick
-   [Vehicle Events API](https://github.com/Konijima/pz-vehicle-events). Steam then
-   offers to subscribe to it when someone subscribes to your mod. `mod.info`
-   alone doesn't do that.
+### Ask for it, don't copy it
 
-3. Servers need both in their settings: the mod IDs in `Mods=` and the
-   Workshop IDs in `WorkshopItems=`.
+Your players install Vehicle Events API next to your mod. Please don't copy its
+files into your own: two copies of the same file fight each other, and yours
+stops getting fixes.
 
-### 2. Listen to an event
+Add one line to your `mod.info`. The game then loads the API first, and refuses
+to load your mod without it:
+
+```
+require=\VehicleEvents
+```
+
+On your Steam Workshop page, also add it as a **Required item** (*Add/Remove
+Required Items* in the owner controls). Then Steam offers to subscribe to it
+along with your mod, which `mod.info` alone doesn't do. Servers list it like
+any mod: its ID in `Mods=`, its Workshop ID in `WorkshopItems=`.
+
+### Listen
 
 ```lua
 -- media/lua/client/MyMod.lua
 local function onEngineStarted(player, vehicle)
-    print("engine started")
+    print("vroom")
 end
 
 Events.VehicleEvents_OnPlayerVehicleEngineStarted.Add(onEngineStarted)
 ```
 
-No `require` needed in `client/` or `server/` files. In a `shared/` file, put
-`require "VehicleEvents"` at the top so it loads first.
+That's all. Files in `client/` and `server/` load after the API on their own. A
+file in `shared/` needs `require "VehicleEvents"` at the top.
 
-Start the game with `-debug` to see every event printed in the console.
+Start the game with `-debug` and every event prints to the console as it fires,
+which is the quickest way to see what you can use.
 
 ---
 
-## Client or server?
+## Two points of view
 
-Every event comes in two kinds. Pick the one that matches where your code runs.
+Every event exists twice, because there are two ways to look at a car.
 
-| | 🧍 Player event | 🌍 World event |
+**The player's view.** These events follow the car a local player is sitting
+in, any seat, and nothing else. They run in the player's own game, so your code
+goes in `client/`. Their names start with `VehicleEvents_OnPlayerVehicle`, and
+the first parameter is the player.
+
+**The world's view.** These events follow every loaded car, even the empty ones
+parked down the street. They run where the world lives, so your code goes in
+`server/`. Their names start with `VehicleEvents_OnVehicle`, and the first
+parameter is the car.
+
+| | Player events | World events |
 |---|---|---|
-| **Name starts with** | `VehicleEvents_OnPlayerVehicle...` | `VehicleEvents_OnVehicle...` |
-| **Runs on** | Client (your game) | Server |
-| **Watches** | The car you sit in (any seat) | Every loaded car, even empty |
-| **Speed** | Every tick (🐢 events: every second) | Every second (🐢 events: every 5 seconds), see [settings](#settings) |
-| **Your code goes in** | `media/lua/client/` | `media/lua/server/` |
+| Single player | yes | yes |
+| Multiplayer client | yes | no |
+| Multiplayer server | no | yes |
 
-Where each kind fires:
+In single player your game is both, so a car you drive fires each change twice,
+once from each point of view. Pick the one that fits what you're doing.
 
-| | 🧍 Player events | 🌍 World events |
-|---|---|---|
-| Single player | ✅ | ✅ |
-| Multiplayer client (co-op included) | ✅ | — |
-| Multiplayer server | — | ✅ |
-
-> In single player your game is both client and server, so a car you drive
-> fires each change twice: once per kind.
+Player events check every tick. World events check every loaded car once a
+second (a [setting](#settings)). A few events that rarely need to be instant,
+marked 🐢 below, are checked less often: every second for the player, every
+fifth pass for the world.
 
 ---
 
-## Parameters
-
-Each event below shows its parameters, for the 🧍 player version and the 🌍
-world version. **—** means that version does not exist.
-
-- On / off events (like `EngineStarted` / `EngineStopped`) also get the new and
-  old value after the listed ones (`true` / `false`). You never need them.
-- Player part events skip the vehicle (the game allows only 4 parameters). Use
-  `part:getVehicle()`.
-- `part:getId()` tells you which part: `DoorFrontLeft`, `TrunkDoor`,
-  `EngineDoor`...
-- Seat `0` is the driver. The other numbers follow the car's script.
-
-```lua
--- a player event: listed params are (player, vehicle)
-local function onHeadlightsOn(player, vehicle)
-end
-Events.VehicleEvents_OnPlayerVehicleHeadlightsTurnedOn.Add(onHeadlightsOn)
-
--- the world version of the same event: listed params are (vehicle)
-local function onAnyHeadlightsOn(vehicle)
-end
-Events.VehicleEvents_OnVehicleHeadlightsTurnedOn.Add(onAnyHeadlightsOn)
-```
-
----
-
-## Event list
+## The events
 
 Put `VehicleEvents_OnPlayerVehicle` or `VehicleEvents_OnVehicle` in front of a
-name. Example: `EngineStarted` → `VehicleEvents_OnPlayerVehicleEngineStarted`.
+name: `EngineStarted` becomes `VehicleEvents_OnPlayerVehicleEngineStarted`.
 
-Events marked 🐢 are checked less often (every second for players, every 5th
-world check for the world), so they can be a little late.
+A few things hold for all of them:
 
-### 🚪 Getting in and out
+- On / off pairs, like `EngineStarted` / `EngineStopped`, also receive the new
+  and old value (`true`, `false`) after the parameters shown. You can ignore
+  them.
+- Player events about a part get the part instead of the car (the game allows
+  four parameters). `part:getVehicle()` gives you the car, and `part:getId()`
+  tells you which part it is: `DoorFrontLeft`, `TrunkDoor`, `EngineDoor`...
+- Seat `0` is the driver.
+- A dash means that point of view doesn't have the event.
 
-| Events | Fires when | 🧍 Player params | 🌍 World params |
+### Getting in and out
+
+| Event | When | Player | World |
 |---|---|---|---|
 | `Entered` | Someone gets in | `player, vehicle, seat` | `vehicle, character, seat` |
-| `Exited` | Someone gets out (dying in the car counts) | `player, vehicle, seat` | `vehicle, character, seat` |
-| `SeatChanged` | Someone moves to another seat | `player, vehicle, newSeat, oldSeat` | `vehicle, character, newSeat, oldSeat` |
-| `BecameOccupied` / `BecameEmpty` | First person gets in / last person gets out | — | `vehicle` |
-| `FirstOpened` | A player opens one of the car's doors for the first time | — | `vehicle` |
+| `Exited` | Someone gets out, dying included | `player, vehicle, seat` | `vehicle, character, seat` |
+| `SeatChanged` | Someone changes seat | `player, vehicle, newSeat, oldSeat` | `vehicle, character, newSeat, oldSeat` |
+| `BecameOccupied` / `BecameEmpty` | The first one gets in / the last one leaves | — | `vehicle` |
+| `FirstOpened` | A player opens one of its doors for the first time | — | `vehicle` |
 
-> Player events only watch the car you sit in, so they can't see the moment a
-> car becomes occupied, empty or first opened. Those happen before you are in
-> or after you left.
+The last two are world only: a player can't be inside a car at the moment it
+was still empty.
 
-### 🔧 Engine and power
+### Engine and power
 
-| Events | Fires when | 🧍 Player params | 🌍 World params |
+| Event | When | Player | World |
 |---|---|---|---|
-| `EngineStarted` / `EngineStopped` | The engine is running / stops (turned off, stalled, no fuel) | `player, vehicle` | `vehicle` |
-| `EngineStateChanged` | The engine state changes (see below) | `player, vehicle, newState, oldState` | `vehicle, newState, oldState` |
+| `EngineStarted` / `EngineStopped` | The engine runs / stops (turned off, stalled, out of fuel) | `player, vehicle` | `vehicle` |
+| `EngineStateChanged` | The engine moves to another state | `player, vehicle, new, old` | `vehicle, new, old` |
 | `FuelEmpty` / `FuelRefilled` | The tank runs dry / has fuel again | `player, vehicle` | `vehicle` |
-| `FuelLow` / `FuelNoLongerLow` | Fuel goes below 25% / back above 30% ([settings](#settings)) | `player, vehicle` | `vehicle` |
-| `PowerLost` / `PowerRestored` | The car has no power (battery dead or removed) / has power again | `player, vehicle` | `vehicle` |
-| `BatteryLow` / `BatteryNoLongerLow` | Charge goes below 20% / back above 25% ([settings](#settings)) | `player, vehicle` | `vehicle` |
+| `FuelLow` / `FuelNoLongerLow` | Fuel drops below 25% / climbs back over 30% | `player, vehicle` | `vehicle` |
+| `PowerLost` / `PowerRestored` | No power (battery dead or gone) / power again | `player, vehicle` | `vehicle` |
+| `BatteryLow` / `BatteryNoLongerLow` | Charge drops below 20% / climbs back over 25% | `player, vehicle` | `vehicle` |
 | `BrokeDown` / `BecameDriveable` 🐢 | The car can't drive anymore / can again | `player, vehicle` | `vehicle` |
 
-Engine states (`newState`, `oldState`): `Idle`, `Starting`, `RetryingStarting`,
-`StartingSuccess`, `StartingFailed`, `Running`, `Stalling`, `ShuttingDown`.
-Compare with `tostring(newState) == "Running"`. A failed start only shows up
-here, because `EngineStarted` waits until the engine really runs.
+The engine states are `Idle`, `Starting`, `RetryingStarting`, `StartingSuccess`,
+`StartingFailed`, `Running`, `Stalling` and `ShuttingDown`; compare them with
+`tostring(new) == "Running"`. A start that fails only shows up here, since
+`EngineStarted` waits for an engine that really runs.
 
-### 🏎️ Driving
+### Driving
 
-| Events | Fires when | 🧍 Player params | 🌍 World params |
+| Event | When | Player | World |
 |---|---|---|---|
-| `StartedMoving` / `StoppedMoving` | Speed on the ground (falling doesn't count) goes above 2 km/h / below 0.5 km/h | `player, vehicle` | `vehicle` |
-| `Flipped` / `BackOnWheels` | The car ends up on its roof or side / back on its wheels ([settings](#settings)) | `player, vehicle` | `vehicle` |
-| `GearChanged` | The gear changes (`-1` = R, `0` = N, `1` and up) | `player, vehicle, newGear, oldGear` | — |
-| `ShiftedIntoReverse` / `ShiftedOutOfReverse` | The gear goes into / out of R (moving or not) | `player, vehicle` | — |
-| `CruiseControlTurnedOn` / `CruiseControlTurnedOff` | Cruise control turns on / off (driver only, see below) | `player, vehicle` | — |
-| `WentOffroad` / `BackOnRoad` 🐢 | The car leaves / gets back on the road | `player, vehicle` | — |
+| `StartedMoving` / `StoppedMoving` | Ground speed goes over 2 km/h / under 0.5 km/h | `player, vehicle` | `vehicle` |
+| `Flipped` / `BackOnWheels` | It ends up on its roof or side / back on its wheels | `player, vehicle` | `vehicle` |
+| `GearChanged` | The gear changes: `-1` is reverse, `0` neutral | `player, vehicle, newGear, oldGear` | — |
+| `ShiftedIntoReverse` / `ShiftedOutOfReverse` | Into / out of reverse, moving or not | `player, vehicle` | — |
+| `CruiseControlTurnedOn` / `CruiseControlTurnedOff` | Cruise control on / off | `player, vehicle` | — |
+| `WentOffroad` / `BackOnRoad` 🐢 | Leaves the road / gets back on it | `player, vehicle` | — |
 
-### 💡 Lights and sounds
+### Lights and sounds
 
-| Events | Fires when | 🧍 Player params | 🌍 World params |
+| Event | When | Player | World |
 |---|---|---|---|
 | `HeadlightsTurnedOn` / `HeadlightsTurnedOff` | Headlights on / off | `player, vehicle` | `vehicle` |
-| `LightbarTurnedOn` / `LightbarTurnedOff` | Police lights on / off (siren or not) | `player, vehicle` | `vehicle` |
+| `LightbarTurnedOn` / `LightbarTurnedOff` | Police lights on / off | `player, vehicle` | `vehicle` |
 | `SirenTurnedOn` / `SirenTurnedOff` | Siren on / off | `player, vehicle` | `vehicle` |
-| `RadioTurnedOn` / `RadioTurnedOff` | Car radio on / off | `player, vehicle` | `vehicle` |
+| `RadioTurnedOn` / `RadioTurnedOff` | Radio on / off | `player, vehicle` | `vehicle` |
 | `HeaterTurnedOn` / `HeaterTurnedOff` | Heater or AC on / off | `player, vehicle` | `vehicle` |
-| `HornStarted` / `HornStopped` | Horn starts / stops | `player, vehicle` | — |
+| `HornStarted` / `HornStopped` | Horn pressed / released | `player, vehicle` | — |
 
-### 🔐 Alarm, keys and locks
+### Alarm, keys and locks
 
-| Events | Fires when | 🧍 Player params | 🌍 World params |
+| Event | When | Player | World |
 |---|---|---|---|
 | `AlarmStartedRinging` / `AlarmStoppedRinging` | The alarm starts / stops sounding | `player, vehicle` | `vehicle` |
-| `AlarmArmed` / `AlarmDisarmed` | The alarm gets armed / disarmed (also when it goes off) | `player, vehicle` | `vehicle` |
-| `IgnitionKeyInserted` / `IgnitionKeyRemoved` | Keys go in / come out of the ignition | `player, vehicle` | — |
-| `Hotwired` / `HotwireRemoved` | The car gets hotwired / no longer is | `player, vehicle` | `vehicle` |
+| `AlarmArmed` / `AlarmDisarmed` | The alarm is armed / disarmed | `player, vehicle` | `vehicle` |
+| `IgnitionKeyInserted` / `IgnitionKeyRemoved` | Key in / out of the ignition | `player, vehicle` | — |
+| `Hotwired` / `HotwireRemoved` | Hotwired / not anymore | `player, vehicle` | `vehicle` |
 | `HotwireBroken` / `HotwireRepaired` | The hotwire breaks / works again | `player, vehicle` | `vehicle` |
-| `AnyDoorLocked` / `AllDoorsUnlocked` | One seat door gets locked / no seat door is locked anymore (trunk not included) | `player, vehicle` | `vehicle` |
-| `TrunkLocked` / `TrunkUnlocked` | The trunk gets locked / unlocked | `player, vehicle` | `vehicle` |
+| `AnyDoorLocked` / `AllDoorsUnlocked` | One seat door locks / none is locked anymore | `player, vehicle` | `vehicle` |
+| `TrunkLocked` / `TrunkUnlocked` | Trunk locked / unlocked | `player, vehicle` | `vehicle` |
 
-### 🪟 Doors and windows
+### Doors and windows
 
-| Events | Fires when | 🧍 Player params | 🌍 World params |
+| Event | When | Player | World |
 |---|---|---|---|
 | `DoorOpened` / `DoorClosed` | A door, the trunk or the hood opens / closes | `player, part` | `vehicle, part` |
-| `DoorLocked` / `DoorUnlocked` | One door gets locked / unlocked | `player, part` | `vehicle, part` |
+| `DoorLocked` / `DoorUnlocked` | One door locks / unlocks | `player, part` | `vehicle, part` |
 | `WindowOpened` / `WindowClosed` | A window rolls down / up | `player, part` | `vehicle, part` |
 | `WindowSmashed` / `WindowRepaired` | A window breaks / is fixed | `player, part` | `vehicle, part` |
 
-### 🛞 Parts and tires
+### Parts and tires
 
-| Events | Fires when | 🧍 Player params | 🌍 World params |
+| Event | When | Player | World |
 |---|---|---|---|
-| `PartInstalled` / `PartRemoved` 🐢 | A part is put in / taken out | `player, part, newItem, oldItem` | `vehicle, part, newItem, oldItem` |
-| `PartConditionChanged` 🐢 | A part's condition changes (0 to 100) | `player, part, newCondition, oldCondition` | `vehicle, part, newCondition, oldCondition` |
-| `TireWentFlat` / `TireInflated` 🐢 | A tire has no air left / gets air again | `player, part` | `vehicle, part` |
-| `TireMissing` / `AllTiresInstalled` 🐢 | A tire is missing / all tires are back | `player, vehicle` | `vehicle` |
+| `PartInstalled` / `PartRemoved` 🐢 | A part goes in / comes out | `player, part, newItem, oldItem` | `vehicle, part, newItem, oldItem` |
+| `PartConditionChanged` 🐢 | A part's condition changes (0 to 100) | `player, part, new, old` | `vehicle, part, new, old` |
+| `TireWentFlat` / `TireInflated` 🐢 | A tire loses all its air / gets some back | `player, part` | `vehicle, part` |
+| `TireMissing` / `AllTiresInstalled` 🐢 | A tire is missing / they are all back | `player, vehicle` | `vehicle` |
 
-For `PartInstalled`, `newItem` is the item put in. For `PartRemoved`, `oldItem`
-is the item taken out (`newItem` is `nil`).
+### Cargo and towing
 
-### 📦 Cargo and towing
-
-| Events | Fires when | 🧍 Player params | 🌍 World params |
+| Event | When | Player | World |
 |---|---|---|---|
 | `CargoChanged` 🐢 | Items go in or out | `player, vehicle, newWeight, oldWeight` | `vehicle, newWeight, oldWeight` |
-| `AnimalsChanged` | Animals go in or out of a trailer (no vanilla car with seats carries animals, so world only) | — | `vehicle, newSize, oldSize` |
-| `StartedTowing` / `StoppedTowing` | The car starts / stops towing another | `player, vehicle, newTowed, oldTowed` | `vehicle, newTowed, oldTowed` |
-| `StartedBeingTowed` / `StoppedBeingTowed` | The car gets towed / is let go | `player, vehicle, newTower, oldTower` | `vehicle, newTower, oldTower` |
+| `AnimalsChanged` | Animals go in or out of a trailer | — | `vehicle, newSize, oldSize` |
+| `StartedTowing` / `StoppedTowing` | Starts / stops towing another car | `player, vehicle, newTowed, oldTowed` | `vehicle, newTowed, oldTowed` |
+| `StartedBeingTowed` / `StoppedBeingTowed` | Gets hooked to / let go by another car | `player, vehicle, newTower, oldTower` | `vehicle, newTower, oldTower` |
+| `Unloaded` | The car leaves the world (unloaded or deleted) | — | `vehicle` |
 
-For `StartedTowing`, `newTowed` is the car being towed. For `StoppedTowing`,
-`oldTowed` is the car that was towed (`newTowed` is `nil`). Same idea for
-`newTower` / `oldTower`: the car doing the towing.
-
-### 🌍 World only
-
-| Events | Fires when | 🧍 Player params | 🌍 World params |
-|---|---|---|---|
-| `Unloaded` | A car is unloaded or deleted. It is already out of the world | — | `vehicle` |
+`AnimalsChanged` is world only because no vanilla car with seats carries
+animals.
 
 ---
 
-## Good to know
+## Things worth knowing
 
-**⏱️ Timing**
+**Events describe changes, not states.** Getting into a car fires `Entered` and
+nothing else: if the engine was already running, you won't get `EngineStarted`.
+Ask the car directly when you need its state. In the same spirit, a car that
+loads in as you drive up fires nothing; a car that unloads fires `Unloaded`.
+Loading a save while sitting in a car does fire `Entered`.
 
-- Getting in a car only fires `Entered`. The rest waits for a change after
-  that: getting into a running car does not fire `EngineStarted`.
-- Loading a save while sitting in a car fires `Entered`.
-- A car loading in fires nothing, except sometimes `StartedMoving` /
-  `StoppedMoving` right after: it really drops onto the ground for a moment.
-- World events can miss a change that lasts less than one check.
-- In multiplayer, player events arrive a little late: the server decides, then
-  tells the client.
-- Split screen works: each local player gets their own player events. Two
-  players in the same car both get them (once each). Use the world event, or
-  check `vehicle:getDriver() == player`, if you want it once per car.
+**Some vanilla behaviour shows through.** The game clears the "armed" flag when
+an alarm goes off, so `AlarmDisarmed` fires then too. `FirstOpened` follows the
+game's own "previously entered" flag, which arming the alarm resets, so it can
+fire again later. When a driven car is hooked behind an empty one, the game
+swaps them at once so the driven car does the towing: you'll see
+`StartedBeingTowed`, then `StoppedBeingTowed` and `StartedTowing` a moment
+later. Cruise control is only known to the driver's game, so its events only
+fire there.
 
-**🎯 Odd cases**
+**Timing has limits.** A world check that comes once a second can miss
+something that lasts less than that. Two changes in a row between checks look
+like one: swapping a part for another fires `PartInstalled` again without
+`PartRemoved` first. In multiplayer, player events come a moment late, because
+the server decides and then tells the client. And `PartConditionChanged` gets
+chatty when you plough through zombies.
 
-- `AlarmDisarmed` also fires when the alarm goes off: the game clears the armed
-  flag when it triggers.
-- `FirstOpened` is the game's "previously entered" flag. It is set the first
-  time a player opens a door, and cleared when the alarm gets armed, so it can
-  fire again after that.
-- Swapping a part, or switching towed cars, between two checks fires
-  `PartInstalled` / `StartedTowing` again, without the "removed" event first.
-- `PartConditionChanged` fires a lot while you hit zombies.
-- A car with a driver towed by a car without one: the game swaps them right
-  away so the driven car does the towing. You get `StartedBeingTowed`, then
-  `StoppedBeingTowed` and `StartedTowing` a moment later.
-- Cruise control events only fire in the driver's game: the game does not send
-  cruise control on / off to the other players.
+**Several players, one car.** Each local player in split screen gets their own
+player events, and two players in the same car both get them. If you want an
+event once per car, use the world event, or check
+`vehicle:getDriver() == player`.
 
-**⚡ Performance**
+**It costs nothing until someone listens.** A check only runs while at least
+one mod listens to one of its events, so the mod sits idle until then. Add and
+remove your listeners as usual; the counting happens behind the scenes. A
+listener added mid-game starts from that moment.
 
-- Checks only run while some mod listens to their event. Nobody listening =
-  almost no cost. You use `Events.X.Add` / `Events.X.Remove` as usual, the
-  counting happens in the background.
-- A listener added mid-game starts from that moment: its first check only
-  records, changes are caught from the next one.
-- If a watcher's function errors, that watcher is switched off (until its
-  file is reloaded) and the other checks keep running. The game prints the
-  error once, not every tick.
+**One broken check doesn't take down the rest.** If a check throws an error, it
+switches itself off, the error prints once, and every other event keeps
+working.
 
----
+### The game's own vehicle events
 
-## Vanilla events you can still use
+The game already has a few, and this mod doesn't duplicate them:
+`OnSpawnVehicleEnd(vehicle)` when a car appears in the world,
+`OnUseVehicle(character, vehicle)` when the "use vehicle" key is pressed, and
+`OnPlayerGetDamage(character, "CARCRASHDAMAGE", damage)` when a crash hurts
+someone inside.
 
-The game already has these. This mod does not copy them.
-
-| Vanilla event | Use it for |
-|---|---|
-| `OnSpawnVehicleEnd(vehicle)` | A car is added to the world (spawned or loaded). Instant, client and server |
-| `OnUseVehicle(character, vehicle)` | The "use vehicle" key is pressed |
-| `OnPlayerGetDamage(character, "CARCRASHDAMAGE", damage)` | Someone inside gets hurt in a crash |
-
-Why use this mod's `Entered` / `Exited` instead of the game's `OnEnterVehicle`
-/ `OnExitVehicle`? Those only fire on the client, give no seat, and on exit the
-vehicle is already gone.
-
-`OnVehicleHorn` exists in the game but nothing ever fires it. Use
-`HornStarted` / `HornStopped`.
+Prefer `Entered` and `Exited` over the game's `OnEnterVehicle` and
+`OnExitVehicle`: those only fire on the client, don't say which seat, and on
+exit the car is already gone. And `OnVehicleHorn` exists but the game never
+fires it; `HornStarted` does the job.
 
 ---
 
-## Make your own events
+## Your own events
 
-The built-in events cover vanilla cars. Use this for things the game does not
-have, like a part from a modded vehicle. Put it in your mod's `shared/` folder.
-
-### A car value: `addWatcher`
+The built-in events cover vanilla cars. For anything else, say a nitro tank
+from your own vehicle mod, describe the value to watch and the API turns its
+changes into events. Put this in your mod's `shared/` folder:
 
 ```lua
 require "VehicleEvents"
 
--- return true when the nitro tank is empty
 local function isNitroEmpty(vehicle)
     local nitro = vehicle:getPartById("MyMod_NitroTank")
-    if not nitro then
-        return false -- this car has no nitro tank
-    end
+    if not nitro then return false end
     return nitro:getContainerContentAmount() <= 0
 end
 
 VehicleEvents.addWatcher("Nitro", isNitroEmpty, {
-    on = "NitroEmpty",     -- fires when isNitroEmpty goes from false to true
-    off = "NitroRefilled", -- fires when isNitroEmpty goes from true to false
-    world = true,          -- also make the world events
+    on = "NitroEmpty",      -- fires when it turns true
+    off = "NitroRefilled",  -- fires when it turns false
+    world = true,           -- the world's view too
 })
 ```
 
-You get `VehicleEvents_OnPlayerVehicleNitroEmpty`,
-`VehicleEvents_OnPlayerVehicleNitroRefilled`, and the same two world events.
+You now have `VehicleEvents_OnPlayerVehicleNitroEmpty`,
+`VehicleEvents_OnPlayerVehicleNitroRefilled`, and their two world twins.
 
-### A value on each part: `addPartWatcher`
-
-One more function picks which parts to watch:
+To watch something on each part, `addPartWatcher` takes one more function,
+choosing the parts:
 
 ```lua
--- which parts to watch: only my mod's spoilers
-local function isSpoiler(part)
-    return part:getId() == "MyMod_Spoiler"
-end
+local function isSpoiler(part) return part:getId() == "MyMod_Spoiler" end
+local function getCondition(part) return part:getCondition() end
 
--- the value to watch: the spoiler's condition
-local function getCondition(part)
-    return part:getCondition()
-end
-
-VehicleEvents.addPartWatcher("Spoiler", isSpoiler, getCondition, {
-    world = true,
-    slow = true, -- no need to check every tick
-})
+VehicleEvents.addPartWatcher("Spoiler", isSpoiler, getCondition, { world = true, slow = true })
 ```
 
-No `on` / `off` here, so you get one event: `...SpoilerChanged`.
+Without `on` and `off` you get a single event for any change: here,
+`...SpoilerChanged`.
 
-### Options
-
-| Option | What it does |
+| Option | Effect |
 |---|---|
-| `on` / `off` | Event names for when the value turns true / false. `off` is optional |
-| *(no `on`)* | One `<name>Changed` event for any change |
-| `world = true` | Also make world events (server) |
-| `player = false` | No player events, world only |
-| `slow = true` | Check less often |
-| `same = function(new, old)` | Return true when two different values are the same thing, so no event. For items: in MP the client gets a new copy of an item on every sync, so compare `getID()` |
+| `on`, `off` | Names of the events for "turned true" and "turned false". `off` is optional |
+| `world = true` | Also fire the world's view |
+| `player = false` | World's view only |
+| `slow = true` | Check less often (🐢) |
+| `same = function(new, old)` | Say two different values are the same thing, so nothing fires. For items, compare `getID()`: in multiplayer the client gets a fresh copy of an item every time the server syncs it |
 
-Rules:
-
-- Keep the function fast: it runs very often.
-- Return a true/false, number, string or game object. Not a Lua table.
-- Names must be new. A built-in watcher name or a taken event name prints an
-  error in the console, and nothing changes.
+Keep the function quick, since it runs often. Return a boolean, a number, a
+string or a game object, never a Lua table. Names must be new: reusing one
+prints an error and changes nothing.
 
 ---
 
 ## Settings
 
-Settings are **sandbox options**, on the **Vehicle Events API** page. Whoever
-hosts the game sets them: the sandbox screen in single player, the server
-settings for co-op and dedicated servers. The mod reads them live, so a change
-applies at once.
+The settings are sandbox options, on the **Vehicle Events API** page, so
+whoever hosts the game decides: the sandbox screen in single player, the server
+settings otherwise. Changes apply at once. The page is translated into every
+language the game supports.
 
-| Option | Default | What it does |
+| Option | Default | |
 |---|---|---|
-| Low fuel (%) | `25` | `FuelLow` below this. `FuelNoLongerLow` once 5% above again |
-| Low battery (%) | `20` | `BatteryLow` below this. `BatteryNoLongerLow` once 5% above again |
-| Flipped angle (degrees) | `70` | `Flipped` when tilted more than this from upright (90 = on its side, 180 = on its roof). `BackOnWheels` once back under this minus 25 |
-| World check interval (ms) | `1000` | Time between two checks of every loaded car |
-| World check cars per tick | `50` | Cars handled per tick. Lower = smoother, but a full check takes longer |
+| Low fuel (%) | 25 | `FuelLow` under this, `FuelNoLongerLow` 5% above it |
+| Low battery (%) | 20 | `BatteryLow` under this, `BatteryNoLongerLow` 5% above it |
+| Flipped angle (°) | 70 | `Flipped` past this tilt (90 is on its side, 180 on its roof), `BackOnWheels` 25° under it |
+| World check interval (ms) | 1000 | Time between two passes over every loaded car |
+| World check cars per tick | 50 | Cars checked per tick. Lower is smoother, but a pass takes longer |
 
-The option names and tooltips are translated in every language the game
-supports.
-
-From Lua: `VehicleEvents.getSetting("FuelLowPercent")`. The names are
-`FuelLowPercent`, `BatteryLowPercent`, `FlippedAngle`, `WorldCheckMs` and
-`WorldCarsPerTick`.
+From Lua: `VehicleEvents.getSetting("FuelLowPercent")`, with `FuelLowPercent`,
+`BatteryLowPercent`, `FlippedAngle`, `WorldCheckMs` or `WorldCarsPerTick`.
 
 ---
 
-## Tested
+## How it was tested
 
-A test mod drives the real game: it spawns a police car, changes one thing at a
-time (engine, lights, siren, radio, keys, hotwire, locks, doors, windows, parts,
-tires, fuel, battery, alarm, cargo, a trailer with a cow, a car towing ours,
-flipping it, unloading its chunk, dying in it) and drives it with real key
-presses. For each change it checks that every event the list above promises
-fires, once, on the right side, with the right arguments, and that nothing
-else fires.
+Every event here was seen firing in the real game before this was published.
 
-Last runs, Build 42.21.0:
+A test mod takes over a fresh world. It parks a police car in the street and
+works through it one change at a time: the engine, the lights, the siren, the
+radio, the keys, a hotwire, the locks, every door and window, parts and tires,
+fuel and battery, the alarm, the trunk's cargo, a trailer with a cow in it, a
+second car towing ours, a flip onto the roof, a walk far enough away for the
+car to unload, and finally the driver dying at the wheel. It even drives,
+pressing real keys. After each change it checks that each promised event fired
+once, on the right side, with the right values, and that nothing else did.
 
-| Run | Result |
-|---|---|
-| Single player | 93 pass, 0 fail, no Lua error |
-| Multiplayer: client and dedicated server | 94 pass, 0 fail, no Lua error |
-| Guided (a person drives offroad and back) | 10 pass, 0 fail |
+The latest runs, on Build 42.21.0:
 
-Every event and side in the list was seen at least once. It also checks the API
-side: no listener means no event, reloading the files while seated fires
-nothing, getting in a running car only fires `Entered`.
+| | Checks passed | Failed | Lua errors |
+|---|---|---|---|
+| Single player | 93 | 0 | none |
+| Multiplayer, client and dedicated server | 94 | 0 | none |
+| Guided, a person driving offroad and back | 10 | 0 | none |
 
-Not tested: split screen (needs a second controller).
-
-How to run it yourself: [TESTING.md](TESTING.md).
+The only thing left untested is split screen, which needs a second controller.
+To run the tests yourself, see [TESTING.md](TESTING.md).
 
 ---
 
-## Files
-
-`workshop.txt` and `Contents/` are the Workshop upload folder. The Workshop
-page lists the event names and links here for the details.
-
-Sandbox translations are in `media/lua/shared/Translate/<language>/Sandbox.json`.
-Write a percent sign as `%%`: the game runs these texts through Java's
-`String.format`, so a single `%` logs a formatting error each time it shows.
-
-`preview.png` (Workshop), `poster.png` and `icon.png` (mod list) are drawn by
-`tools/make-images.py`. See [CHANGELOG.md](CHANGELOG.md) for releases.
+<sub>`workshop.txt` and `Contents/` are the Workshop upload. Sandbox texts live in
+`Translate/<language>/Sandbox.json`, where a percent sign is written `%%`
+because the game passes them through `String.format`. The images are drawn by
+`tools/make-images.py`. Releases are in [CHANGELOG.md](CHANGELOG.md).</sub>
