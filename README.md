@@ -16,7 +16,8 @@ into any other game event.
 It is tested in the real game, every event, in single player and in
 multiplayer on a dedicated server ([how](#how-it-was-tested)).
 
-Mod ID: `VehicleEvents`.
+Mod ID `VehicleEvents`, Workshop ID `3812280978`:
+[subscribe on the Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3812280978).
 
 ---
 
@@ -35,10 +36,12 @@ to load your mod without it:
 require=\VehicleEvents
 ```
 
-On your Steam Workshop page, also add it as a **Required item** (*Add/Remove
-Required Items* in the owner controls). Then Steam offers to subscribe to it
-along with your mod, which `mod.info` alone doesn't do. Servers list it like
-any mod: its ID in `Mods=`, its Workshop ID in `WorkshopItems=`.
+On your Steam Workshop page, also add
+[Vehicle Events API](https://steamcommunity.com/sharedfiles/filedetails/?id=3812280978)
+as a **Required item** (*Add/Remove Required Items* in the owner controls).
+Then Steam offers to subscribe to it along with your mod, which `mod.info`
+alone doesn't do. Servers list it like any mod: `VehicleEvents` in `Mods=`,
+`3812280978` in `WorkshopItems=`.
 
 ### Listen
 
