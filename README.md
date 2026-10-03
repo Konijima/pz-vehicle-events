@@ -7,6 +7,9 @@ The game does a lot of car things without telling Lua. Pressing W starts the
 engine, an engine stalls, an alarm goes off, a door opens: no event fires.
 This mod watches cars and fires an event when something changes.
 
+**Tested in game, every event, in single player and multiplayer** (client and
+dedicated server, Build 42.21.0). See [Tested](#tested).
+
 **Contents**
 
 1. [Quick start](#quick-start)
@@ -17,6 +20,7 @@ This mod watches cars and fires an event when something changes.
 6. [Vanilla events you can still use](#vanilla-events-you-can-still-use)
 7. [Make your own events](#make-your-own-events)
 8. [Settings](#settings)
+9. [Tested](#tested)
 
 ---
 
@@ -388,6 +392,34 @@ supports.
 From Lua: `VehicleEvents.getSetting("FuelLowPercent")`. The names are
 `FuelLowPercent`, `BatteryLowPercent`, `FlippedAngle`, `WorldCheckMs` and
 `WorldCarsPerTick`.
+
+---
+
+## Tested
+
+A test mod drives the real game: it spawns a police car, changes one thing at a
+time (engine, lights, siren, radio, keys, hotwire, locks, doors, windows, parts,
+tires, fuel, battery, alarm, cargo, a trailer with a cow, a car towing ours,
+flipping it, unloading its chunk, dying in it) and drives it with real key
+presses. For each change it checks that every event the list above promises
+fires, once, on the right side, with the right arguments, and that nothing
+else fires.
+
+Last runs, Build 42.21.0:
+
+| Run | Result |
+|---|---|
+| Single player | 93 pass, 0 fail, no Lua error |
+| Multiplayer: client and dedicated server | 94 pass, 0 fail, no Lua error |
+| Guided (a person drives offroad and back) | 10 pass, 0 fail |
+
+Every event and side in the list was seen at least once. It also checks the API
+side: no listener means no event, reloading the files while seated fires
+nothing, getting in a running car only fires `Entered`.
+
+Not tested: split screen (needs a second controller).
+
+How to run it yourself: [TESTING.md](TESTING.md).
 
 ---
 

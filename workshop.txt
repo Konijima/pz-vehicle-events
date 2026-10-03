@@ -1,5 +1,5 @@
 version=1
-title=Vehicle Events API
+title=[B42/SP/MP] Vehicle Events API
 description=[h1]Vehicle Events API[/h1]
 description=A mod for modders. The game does many car things without telling Lua: pressing W starts the engine, an engine stalls, an alarm goes off. This mod gives you an event for each of them.
 description=
@@ -40,12 +40,15 @@ description=** Player version only (VehicleEvents_OnPlayerVehicle...).
 description=
 description=Parameters, timing and examples are in the [url=https://github.com/Konijima/pz-vehicle-events]README[/url].
 description=
+description=[h2]Tested[/h2]
+description=Every event is tested in game by a script, in single player and in multiplayer (client and dedicated server), on Build 42.21.0. It spawns a car, changes one thing at a time, drives it with real key presses, and checks that each event fires once, on the right side, with the right values. Last runs: 93 checks in single player, 94 in multiplayer, 0 failures, no Lua errors. Details in the [url=https://github.com/Konijima/pz-vehicle-events/blob/main/TESTING.md]test notes[/url].
+description=
 description=[h2]Good to know[/h2]
 description=[list]
 description=[*] Put it on the server (Mods= and WorkshopItems=).
 description=[*] Only checks what someone listens to. With no listener it costs almost nothing.
 description=[*] Sandbox options on the Vehicle Events API page: low fuel and battery thresholds, flipped angle, world check speed.
-description=[*] Split screen works. Each local player gets their own events.
+description=[*] Split screen: each local player gets their own events (the one case the test script does not cover).
 description=[*] Safe to add or remove mid-save.
 description=[*] Build 42 only.
 description=[/list]
