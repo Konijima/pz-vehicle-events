@@ -1,4 +1,5 @@
 version=1
+id=3812280978
 title=[B42/SP/MP] Vehicle Events API
 description=[h1]Vehicle Events API[/h1]
 description=A mod for modders. The game does many car things without telling Lua: pressing W starts the engine, an engine stalls, an alarm goes off. This mod gives you an event for each of them.
