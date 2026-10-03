@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Poc combustible (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Per sota d'aquest nivell s'activa FuelLow. FuelNoLongerLow s'activa quan torna a superar aquest valor + 5 %%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Bateria baixa (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Per sota d'aquesta càrrega s'activa BatteryLow. BatteryNoLongerLow s'activa quan torna a superar aquest valor + 5 %%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Angle de bolcada (graus)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Un vehicle inclinat més que aquest angle activa Flipped (90 = de costat, 180 = sobre el sostre). BackOnWheels s'activa quan torna a estar per sota d'aquest angle - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Interval de comprovació del món (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Temps entre dues comprovacions de tots els vehicles carregats, per als esdeveniments del món. Més baix = esdeveniments més ràpids, més feina per al servidor.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Vehicles per tick (comprovació del món)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Quants vehicles processa una comprovació del món per tick de joc. Més baix = més fluid en servidors amb molts vehicles, però una comprovació completa triga més."
+}

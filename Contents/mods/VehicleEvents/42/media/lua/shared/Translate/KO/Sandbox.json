@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "연료 부족 (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "연료가 이 값 아래로 내려가면 FuelLow가 발생합니다. 다시 이 값 + 5%%를 넘으면 FuelNoLongerLow가 발생합니다.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "배터리 부족 (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "충전량이 이 값 아래로 내려가면 BatteryLow가 발생합니다. 다시 이 값 + 5%%를 넘으면 BatteryNoLongerLow가 발생합니다.",
+    "Sandbox_VehicleEvents_FlippedAngle": "전복 각도 (도)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "차량이 이 각도보다 더 기울면 Flipped가 발생합니다 (90 = 옆으로 넘어짐, 180 = 뒤집힘). 다시 이 각도 - 25 아래로 돌아오면 BackOnWheels가 발생합니다.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "월드 검사 간격 (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "월드 이벤트를 위해 로드된 모든 차량을 검사하는 간격입니다. 낮을수록 이벤트가 빨라지고 서버 부담이 커집니다.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "틱당 검사 차량 수",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "월드 검사가 게임 틱마다 처리하는 차량 수입니다. 낮을수록 차량이 많은 서버에서 부드럽지만 전체 검사가 더 오래 걸립니다."
+}

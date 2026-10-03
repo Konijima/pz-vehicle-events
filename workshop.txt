@@ -1,30 +1,51 @@
 version=1
 title=Vehicle Events API
 description=[h1]Vehicle Events API[/h1]
-description=A mod for modders. The game does many car things without telling Lua: pressing W starts the engine, an engine stalls, an alarm goes off. This mod fires an event when that happens.
+description=A mod for modders. The game does many car things without telling Lua: pressing W starts the engine, an engine stalls, an alarm goes off. This mod gives you an event for each of them.
+description=
+description=[h2][url=https://github.com/Konijima/pz-vehicle-events]Full documentation on GitHub[/url][/h2]
+description=The README has every event with its parameters, where it runs, the odd cases and how to add your own events.
 description=
 description=[h2]For players[/h2]
 description=Does nothing on its own. Install it when another mod needs it.
 description=
 description=[h2]For modders[/h2]
-description=[code]Events.VehicleEvents_OnPlayerVehicleEngineStarted.Add(myFunction)[/code]
+description=[b]Depend on it, don't copy it into your mod.[/b] Two copies fight each other and yours stops getting fixes.
 description=[list]
-description=[*] [b]VehicleEvents_OnPlayerVehicle...[/b]: the car a player sits in. Single player and multiplayer clients. Not on the server.
-description=[*] [b]VehicleEvents_OnVehicle...[/b]: every loaded car, even empty. Single player and the server. Not on multiplayer clients.
-description=[*] Gear, reversing, keys, cruise control, horn and offroad are player events only.
-description=[*] Occupied or empty, first time opened and unloaded are world events only.
-description=[*] Seat events: Entered, Exited and SeatChanged, with the seat number (0 = driver).
-description=[*] Part events: door, trunk and hood opened or closed, locked or unlocked, windows opened, closed, smashed or repaired, tires flat or inflated, parts installed or removed, part condition.
-description=[*] Unload event: a car unloaded. For a car loaded, use vanilla OnSpawnVehicleEnd.
+description=[*] In your mod.info: [b]require=\VehicleEvents[/b]
+description=[*] On your Workshop page: add this mod as a [b]Required item[/b], so Steam installs it with yours.
 description=[/list]
-description=Car events: engine started or stopped, engine state, fuel (empty or low), battery (dead or low), broke down, moving or stopped, flipped, gear, reversing, cruise control, offroad, headlights, police lights, heater, radio, siren, horn, alarm, keys, hotwire, door and trunk locks, tires, towing, occupied or empty, first time opened, cargo, trailer animals.
 description=
-description=You can add your own events too. See the README for details.
+description=Every event comes in two versions. Put one of these in front of the names below:
+description=[list]
+description=[*] [b]VehicleEvents_OnPlayerVehicle[/b]: the car a local player sits in. Runs in single player and on multiplayer clients.
+description=[*] [b]VehicleEvents_OnVehicle[/b]: every loaded car, even empty ones. Runs in single player and on the server.
+description=[/list]
+description=[code]Events.VehicleEvents_OnPlayerVehicleEngineStarted.Add(onEngineStarted)[/code]
+description=
+description=[h3]Events[/h3]
+description=[list]
+description=[*] [b]Getting in and out:[/b] Entered, Exited, SeatChanged, BecameOccupied*, BecameEmpty*, FirstOpened*
+description=[*] [b]Engine and power:[/b] EngineStarted, EngineStopped, EngineStateChanged, FuelEmpty, FuelRefilled, FuelLow, FuelNoLongerLow, PowerLost, PowerRestored, BatteryLow, BatteryNoLongerLow, BrokeDown, BecameDriveable
+description=[*] [b]Driving:[/b] StartedMoving, StoppedMoving, Flipped, BackOnWheels, GearChanged**, ShiftedIntoReverse**, ShiftedOutOfReverse**, CruiseControlTurnedOn**, CruiseControlTurnedOff**, WentOffroad**, BackOnRoad**
+description=[*] [b]Lights and sounds:[/b] HeadlightsTurnedOn, HeadlightsTurnedOff, LightbarTurnedOn, LightbarTurnedOff, SirenTurnedOn, SirenTurnedOff, RadioTurnedOn, RadioTurnedOff, HeaterTurnedOn, HeaterTurnedOff, HornStarted**, HornStopped**
+description=[*] [b]Alarm, keys and locks:[/b] AlarmStartedRinging, AlarmStoppedRinging, AlarmArmed, AlarmDisarmed, IgnitionKeyInserted**, IgnitionKeyRemoved**, Hotwired, HotwireRemoved, HotwireBroken, HotwireRepaired, AnyDoorLocked, AllDoorsUnlocked, TrunkLocked, TrunkUnlocked
+description=[*] [b]Doors and windows:[/b] DoorOpened, DoorClosed, DoorLocked, DoorUnlocked, WindowOpened, WindowClosed, WindowSmashed, WindowRepaired
+description=[*] [b]Parts and tires:[/b] PartInstalled, PartRemoved, PartConditionChanged, TireWentFlat, TireInflated, TireMissing, AllTiresInstalled
+description=[*] [b]Cargo and towing:[/b] CargoChanged, AnimalsChanged*, StartedTowing, StoppedTowing, StartedBeingTowed, StoppedBeingTowed
+description=[*] [b]World only:[/b] Unloaded
+description=[/list]
+description=* World version only (VehicleEvents_OnVehicle...).
+description=** Player version only (VehicleEvents_OnPlayerVehicle...).
+description=
+description=Parameters, timing and examples are in the [url=https://github.com/Konijima/pz-vehicle-events]README[/url].
 description=
 description=[h2]Good to know[/h2]
 description=[list]
 description=[*] Put it on the server (Mods= and WorkshopItems=).
+description=[*] Only checks what someone listens to. With no listener it costs almost nothing.
 description=[*] Sandbox options on the Vehicle Events API page: low fuel and battery thresholds, flipped angle, world check speed.
+description=[*] Split screen works. Each local player gets their own events.
 description=[*] Safe to add or remove mid-save.
 description=[*] Build 42 only.
 description=[/list]

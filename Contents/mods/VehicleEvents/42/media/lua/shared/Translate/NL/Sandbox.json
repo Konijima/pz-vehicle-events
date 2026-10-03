@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Weinig brandstof (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Onder dit niveau wordt FuelLow geactiveerd. FuelNoLongerLow wordt geactiveerd zodra het weer boven deze waarde + 5%% komt.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Lage accu (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Onder deze lading wordt BatteryLow geactiveerd. BatteryNoLongerLow wordt geactiveerd zodra die weer boven deze waarde + 5%% komt.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Kantelhoek (graden)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Een voertuig dat verder kantelt dan deze hoek activeert Flipped (90 = op zijn zij, 180 = op zijn dak). BackOnWheels wordt geactiveerd zodra het weer onder deze hoek - 25 komt.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Interval wereldcontrole (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Tijd tussen twee controles van alle geladen voertuigen, voor de wereld-events. Lager = snellere events, meer werk voor de server.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Voertuigen per tick (wereldcontrole)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Hoeveel voertuigen een wereldcontrole per speltick verwerkt. Lager = soepeler op servers met veel voertuigen, maar een volledige controle duurt langer."
+}

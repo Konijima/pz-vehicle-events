@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Мало пального (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Нижче цього рівня спрацьовує FuelLow. FuelNoLongerLow спрацьовує, коли рівень знову вищий за це значення + 5%%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Низький заряд акумулятора (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Нижче цього заряду спрацьовує BatteryLow. BatteryNoLongerLow спрацьовує, коли заряд знову вищий за це значення + 5%%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Кут перевертання (градуси)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Машина, нахилена сильніше за цей кут, викликає Flipped (90 = на боці, 180 = на даху). BackOnWheels спрацьовує, коли нахил знову менший за цей кут - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Інтервал перевірки світу (мс)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Час між двома перевірками всіх завантажених машин для подій світу. Менше = швидші події, більше навантаження на сервер.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Машин за тік (перевірка світу)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Скільки машин перевірка світу обробляє за ігровий тік. Менше = плавніше на серверах з великою кількістю машин, але повна перевірка триває довше."
+}

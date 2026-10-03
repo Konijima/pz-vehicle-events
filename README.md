@@ -22,7 +22,31 @@ This mod watches cars and fires an event when something changes.
 
 ## Quick start
 
-Add this mod as a requirement of your mod, then listen like any game event:
+### 1. Depend on the mod, don't copy it
+
+Players need **Vehicle Events API** installed next to your mod. Don't put its
+files inside your own mod: two copies of the same file fight each other, and
+your copy stops getting fixes.
+
+1. In your `mod.info`, add the requirement. The game then refuses to load your
+   mod without it, and loads it first:
+
+   ```
+   require=\VehicleEvents
+   ```
+
+   Several mods: `require=\VehicleEvents,\OtherMod`.
+
+2. On your Steam Workshop page, add it as a **Required item**: *Add/Remove
+   Required Items* in the page's owner controls, then pick
+   [Vehicle Events API](https://github.com/Konijima/pz-vehicle-events). Steam then
+   offers to subscribe to it when someone subscribes to your mod. `mod.info`
+   alone doesn't do that.
+
+3. Servers need both in their settings: the mod IDs in `Mods=` and the
+   Workshop IDs in `WorkshopItems=`.
+
+### 2. Listen to an event
 
 ```lua
 -- media/lua/client/MyMod.lua
@@ -33,7 +57,8 @@ end
 Events.VehicleEvents_OnPlayerVehicleEngineStarted.Add(onEngineStarted)
 ```
 
-No `require` needed in `client/` or `server/` files.
+No `require` needed in `client/` or `server/` files. In a `shared/` file, put
+`require "VehicleEvents"` at the top so it loads first.
 
 Start the game with `-debug` to see every event printed in the console.
 
@@ -134,7 +159,7 @@ here, because `EngineStarted` waits until the engine really runs.
 
 | Events | Fires when | 🧍 Player params | 🌍 World params |
 |---|---|---|---|
-| `StartedMoving` / `StoppedMoving` | Speed goes above 2 km/h / below 0.5 km/h | `player, vehicle` | `vehicle` |
+| `StartedMoving` / `StoppedMoving` | Speed on the ground (falling doesn't count) goes above 2 km/h / below 0.5 km/h | `player, vehicle` | `vehicle` |
 | `Flipped` / `BackOnWheels` | The car ends up on its roof or side / back on its wheels ([settings](#settings)) | `player, vehicle` | `vehicle` |
 | `GearChanged` | The gear changes (`-1` = R, `0` = N, `1` and up) | `player, vehicle, newGear, oldGear` | — |
 | `ShiftedIntoReverse` / `ShiftedOutOfReverse` | The gear goes into / out of R (moving or not) | `player, vehicle` | — |
@@ -190,7 +215,7 @@ is the item taken out (`newItem` is `nil`).
 | Events | Fires when | 🧍 Player params | 🌍 World params |
 |---|---|---|---|
 | `CargoChanged` 🐢 | Items go in or out | `player, vehicle, newWeight, oldWeight` | `vehicle, newWeight, oldWeight` |
-| `AnimalsChanged` | Animals go in or out of a trailer | `player, vehicle, newSize, oldSize` | `vehicle, newSize, oldSize` |
+| `AnimalsChanged` | Animals go in or out of a trailer (no vanilla car with seats carries animals, so world only) | — | `vehicle, newSize, oldSize` |
 | `StartedTowing` / `StoppedTowing` | The car starts / stops towing another | `player, vehicle, newTowed, oldTowed` | `vehicle, newTowed, oldTowed` |
 | `StartedBeingTowed` / `StoppedBeingTowed` | The car gets towed / is let go | `player, vehicle, newTower, oldTower` | `vehicle, newTower, oldTower` |
 
@@ -213,7 +238,8 @@ For `StartedTowing`, `newTowed` is the car being towed. For `StoppedTowing`,
 - Getting in a car only fires `Entered`. The rest waits for a change after
   that: getting into a running car does not fire `EngineStarted`.
 - Loading a save while sitting in a car fires `Entered`.
-- A car loading in fires nothing.
+- A car loading in fires nothing, except sometimes `StartedMoving` /
+  `StoppedMoving` right after: it really drops onto the ground for a moment.
 - World events can miss a change that lasts less than one check.
 - In multiplayer, player events arrive a little late: the server decides, then
   tells the client.
@@ -231,6 +257,9 @@ For `StartedTowing`, `newTowed` is the car being towed. For `StoppedTowing`,
 - Swapping a part, or switching towed cars, between two checks fires
   `PartInstalled` / `StartedTowing` again, without the "removed" event first.
 - `PartConditionChanged` fires a lot while you hit zombies.
+- A car with a driver towed by a car without one: the game swaps them right
+  away so the driven car does the towing. You get `StartedBeingTowed`, then
+  `StoppedBeingTowed` and `StartedTowing` a moment later.
 - Cruise control events only fire in the driver's game: the game does not send
   cruise control on / off to the other players.
 
@@ -327,6 +356,7 @@ No `on` / `off` here, so you get one event: `...SpoilerChanged`.
 | `world = true` | Also make world events (server) |
 | `player = false` | No player events, world only |
 | `slow = true` | Check less often |
+| `same = function(new, old)` | Return true when two different values are the same thing, so no event. For items: in MP the client gets a new copy of an item on every sync, so compare `getID()` |
 
 Rules:
 
@@ -352,6 +382,9 @@ applies at once.
 | World check interval (ms) | `1000` | Time between two checks of every loaded car |
 | World check cars per tick | `50` | Cars handled per tick. Lower = smoother, but a full check takes longer |
 
+The option names and tooltips are translated in every language the game
+supports.
+
 From Lua: `VehicleEvents.getSetting("FuelLowPercent")`. The names are
 `FuelLowPercent`, `BatteryLowPercent`, `FlippedAngle`, `WorldCheckMs` and
 `WorldCarsPerTick`.
@@ -360,5 +393,12 @@ From Lua: `VehicleEvents.getSetting("FuelLowPercent")`. The names are
 
 ## Files
 
-`workshop.txt` and `Contents/` are the Workshop upload folder. `preview.png` is
-still missing. See [CHANGELOG.md](CHANGELOG.md) for releases.
+`workshop.txt` and `Contents/` are the Workshop upload folder. The Workshop
+page lists the event names and links here for the details.
+
+Sandbox translations are in `media/lua/shared/Translate/<language>/Sandbox.json`.
+Write a percent sign as `%%`: the game runs these texts through Java's
+`String.format`, so a single `%` logs a formatting error each time it shows.
+
+`preview.png` (Workshop), `poster.png` and `icon.png` (mod list) are drawn by
+`tools/make-images.py`. See [CHANGELOG.md](CHANGELOG.md) for releases.

@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "น้ำมันเหลือน้อย (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "เมื่อน้ำมันต่ำกว่าค่านี้จะเกิด FuelLow เมื่อกลับขึ้นไปเกินค่านี้ + 5%% จะเกิด FuelNoLongerLow",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "แบตเตอรี่เหลือน้อย (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "เมื่อประจุต่ำกว่าค่านี้จะเกิด BatteryLow เมื่อกลับขึ้นไปเกินค่านี้ + 5%% จะเกิด BatteryNoLongerLow",
+    "Sandbox_VehicleEvents_FlippedAngle": "มุมพลิกคว่ำ (องศา)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "รถที่เอียงมากกว่ามุมนี้จะเกิด Flipped (90 = ตะแคงข้าง, 180 = คว่ำหลังคาลงพื้น) เมื่อกลับมาต่ำกว่ามุมนี้ - 25 จะเกิด BackOnWheels",
+    "Sandbox_VehicleEvents_WorldCheckMs": "ช่วงเวลาตรวจสอบโลก (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "เวลาระหว่างการตรวจสอบรถที่โหลดอยู่ทั้งหมดสองครั้ง สำหรับอีเวนต์ของโลก ค่าต่ำ = อีเวนต์เร็วขึ้น เซิร์ฟเวอร์ทำงานหนักขึ้น",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "จำนวนรถต่อ tick (ตรวจสอบโลก)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "จำนวนรถที่การตรวจสอบโลกจัดการต่อหนึ่ง tick ของเกม ค่าต่ำ = ลื่นไหลขึ้นบนเซิร์ฟเวอร์ที่มีรถมาก แต่การตรวจสอบครบรอบใช้เวลานานขึ้น"
+}

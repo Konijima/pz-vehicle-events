@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Bahan bakar rendah (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Di bawah nilai ini FuelLow dipicu. FuelNoLongerLow dipicu saat kembali di atas nilai ini + 5%%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Baterai lemah (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Di bawah daya ini BatteryLow dipicu. BatteryNoLongerLow dipicu saat kembali di atas nilai ini + 5%%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Sudut terbalik (derajat)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Kendaraan yang miring lebih dari sudut ini memicu Flipped (90 = rebah ke samping, 180 = terbalik). BackOnWheels dipicu saat kembali di bawah sudut ini - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Interval pemeriksaan dunia (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Waktu antara dua pemeriksaan semua kendaraan yang dimuat, untuk event dunia. Lebih rendah = event lebih cepat, server bekerja lebih berat.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Kendaraan per tick (pemeriksaan dunia)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Berapa kendaraan yang diproses satu pemeriksaan dunia per tick game. Lebih rendah = lebih lancar di server dengan banyak kendaraan, tetapi pemeriksaan penuh lebih lama."
+}

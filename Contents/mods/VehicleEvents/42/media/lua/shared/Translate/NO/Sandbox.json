@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Lite drivstoff (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Under dette nivået utløses FuelLow. FuelNoLongerLow utløses når det igjen er over denne verdien + 5 %%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Lavt batteri (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Under denne ladningen utløses BatteryLow. BatteryNoLongerLow utløses når den igjen er over denne verdien + 5 %%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Veltevinkel (grader)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Et kjøretøy som heller mer enn denne vinkelen utløser Flipped (90 = på siden, 180 = på taket). BackOnWheels utløses når det igjen er under denne vinkelen - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Intervall for verdenssjekk (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Tid mellom to sjekker av alle lastede kjøretøy, for verdenshendelsene. Lavere = raskere hendelser, mer arbeid for serveren.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Kjøretøy per tick (verdenssjekk)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Hvor mange kjøretøy en verdenssjekk behandler per spill-tick. Lavere = jevnere på servere med mange kjøretøy, men en full sjekk tar lengre tid."
+}

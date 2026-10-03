@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Wenig Kraftstoff (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Unter diesem Füllstand wird FuelLow ausgelöst. FuelNoLongerLow wird ausgelöst, sobald er wieder über diesem Wert + 5 %% liegt.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Schwache Batterie (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Unter dieser Ladung wird BatteryLow ausgelöst. BatteryNoLongerLow wird ausgelöst, sobald sie wieder über diesem Wert + 5 %% liegt.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Überschlagwinkel (Grad)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Ein Fahrzeug, das stärker als dieser Winkel geneigt ist, löst Flipped aus (90 = auf der Seite, 180 = auf dem Dach). BackOnWheels wird ausgelöst, sobald es wieder unter diesem Winkel - 25 liegt.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Welt-Prüfintervall (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Zeit zwischen zwei Prüfungen aller geladenen Fahrzeuge für die Welt-Events. Niedriger = schnellere Events, mehr Last für den Server.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Fahrzeuge pro Tick (Welt-Prüfung)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Wie viele Fahrzeuge eine Welt-Prüfung pro Spieltick bearbeitet. Niedriger = flüssiger auf Servern mit vielen Fahrzeugen, aber eine vollständige Prüfung dauert länger."
+}

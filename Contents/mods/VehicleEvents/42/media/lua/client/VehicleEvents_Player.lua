@@ -53,10 +53,13 @@ local function checkPlayerVehicle(player)
     checkPlayerSeat(player, vehicle, lastVehicle)
     if not vehicle then return end
 
+    -- a new state (first car, or this file reloaded mid-game) only records
     local state = VE.playerStates[player]
+    local newState = false
     if not state then
         state = VE.newState()
         VE.playerStates[player] = state
+        newState = true
     end
 
     -- nobody listens to player events: skip, and only record on the next check
@@ -64,7 +67,7 @@ local function checkPlayerVehicle(player)
         state.skipped = true
         return
     end
-    local doFire = sameVehicle and not state.skipped
+    local doFire = sameVehicle and not state.skipped and not newState
     state.skipped = false
 
     local now = getTimestampMs()

@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Málo paliva (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Pod touto hodnotou se spustí FuelLow. FuelNoLongerLow se spustí, jakmile palivo znovu přesáhne tuto hodnotu + 5 %%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Slabá baterie (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Pod tímto nabitím se spustí BatteryLow. BatteryNoLongerLow se spustí, jakmile nabití znovu přesáhne tuto hodnotu + 5 %%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Úhel převrácení (stupně)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Vozidlo nakloněné víc než o tento úhel spustí Flipped (90 = na boku, 180 = na střeše). BackOnWheels se spustí, jakmile je znovu pod tímto úhlem - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Interval kontroly světa (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Čas mezi dvěma kontrolami všech načtených vozidel pro události světa. Méně = rychlejší události, víc práce pro server.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Vozidla na tick (kontrola světa)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Kolik vozidel kontrola světa zpracuje za herní tick. Méně = plynulejší na serverech s mnoha vozidly, ale celá kontrola trvá déle."
+}

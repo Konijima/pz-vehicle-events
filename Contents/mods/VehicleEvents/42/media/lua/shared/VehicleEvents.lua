@@ -189,6 +189,8 @@ local function setupWatcher(watcher, getter, options)
     watcher.off = options.off
     watcher.world = options.world == true
     watcher.slow = options.slow == true
+    -- options.same(new, old): true when two different values are the same thing (no event)
+    watcher.same = options.same
     watcher.failed = false
     watcher.playerEvents = nil
     if options.player ~= false then
@@ -313,7 +315,10 @@ function VE.updateWatchers(state, vehicle, player, doFire, includeSlow)
     local list = VE.watcherList
     for i = 1, #list do
         local watcher = list[i]
-        local events = player and watcher.playerEvents or watcher.worldEvents
+        -- not "player and a or b": a watcher with no player version (player = false) must stay quiet
+        -- on the player side, not fall back to its world events
+        local events
+        if player then events = watcher.playerEvents else events = watcher.worldEvents end
         if events and not watcher.failed and (includeSlow or not watcher.slow) then
             if hasListeners(events) then
                 local old = values[watcher.name]
@@ -321,7 +326,8 @@ function VE.updateWatchers(state, vehicle, player, doFire, includeSlow)
                 if not known then old = nil end
                 local ok, value = safeCall(watcher, watcher.get, vehicle, old)
                 if ok then
-                    if doFire and known and isChange(events, value, old) then
+                    if doFire and known and isChange(events, value, old)
+                            and not (watcher.same and watcher.same(value, old)) then
                         local eventName = VE.getEventName(events, value)
                         if eventName and player then
                             triggerEvent(eventName, player, vehicle, value, old)
@@ -376,7 +382,10 @@ function VE.updateParts(state, vehicle, player, doFire, includeSlow)
     for i = 1, #entries do
         local entry = entries[i]
         local watcher = entry.watcher
-        local events = player and watcher.playerEvents or watcher.worldEvents
+        -- not "player and a or b": a watcher with no player version (player = false) must stay quiet
+        -- on the player side, not fall back to its world events
+        local events
+        if player then events = watcher.playerEvents else events = watcher.worldEvents end
         if events and not watcher.failed and (includeSlow or not watcher.slow) then
             if hasListeners(events) then
                 local old = entry.value
@@ -384,7 +393,8 @@ function VE.updateParts(state, vehicle, player, doFire, includeSlow)
                 if not known then old = nil end
                 local ok, value = safeCall(watcher, watcher.get, entry.part, old)
                 if ok then
-                    if doFire and known and isChange(events, value, old) then
+                    if doFire and known and isChange(events, value, old)
+                            and not (watcher.same and watcher.same(value, old)) then
                         local eventName = VE.getEventName(events, value)
                         -- player part events skip the vehicle (part:getVehicle()) to stay at 4 arguments
                         if eventName and player then
@@ -480,9 +490,12 @@ local function getBatteryLow(v, wasLow)
     return percent < low
 end
 
--- two thresholds so a car crawling around one speed doesnt spam start/stop
+-- two thresholds so a car crawling around one speed doesnt spam start/stop.
+-- Horizontal speed only: the game's speed counts falling too, and a car whose physics wakes up
+-- (getting in a running car in MP, a car loading in) can "fall" in place at up to 80 km/h.
+-- getCurrentSpeedKmHour is still checked: it is 0 for a parked car, whose velocity can be stale.
 local function getMoving(v, wasMoving)
-    local speed = v:getCurrentAbsoluteSpeedKmHour()
+    local speed = math.min(v:getCurrentAbsoluteSpeedKmHour(), v:getSpeed2D() * 3.6)
     if wasMoving then return speed > 0.5 end
     return speed > 2
 end
@@ -518,7 +531,8 @@ VE.addWatcher("Lightbar", getLightbar, { on = "LightbarTurnedOn", off = "Lightba
 VE.addWatcher("Heater", getHeaterOn, { on = "HeaterTurnedOn", off = "HeaterTurnedOff", world = true })
 VE.addWatcher("Occupied", getHasPassenger, { on = "BecameOccupied", off = "BecameEmpty", world = true, player = false })
 VE.addWatcher("FirstOpened", getPreviouslyOpened, { on = "FirstOpened", world = true, player = false })
-VE.addWatcher("Animals", getAnimals, { world = true })
+-- world only: no vanilla vehicle that carries animals has seats
+VE.addWatcher("Animals", getAnimals, { world = true, player = false })
 VE.addWatcher("Cargo", getCargo, { world = true, slow = true })
 VE.addWatcher("Towing", getTowing, { on = "StartedTowing", off = "StoppedTowing", world = true })
 VE.addWatcher("BeingTowed", getTowedBy, { on = "StartedBeingTowed", off = "StoppedBeingTowed", world = true })
@@ -547,6 +561,9 @@ local function getDoorLocked(part) return part:getDoor():isLocked() end
 local function getWindowSmashed(part) return part:getWindow():isDestroyed() end
 local function getWindowOpen(part) return part:getWindow():isOpen() end
 local function getInstalledItem(part) return part:getInventoryItem() end
+-- in MP the client gets a new copy of the item each time the server syncs the part (condition...):
+-- same item id = same item, not a PartInstalled
+local function isSameItem(a, b) return a ~= nil and b ~= nil and a:getID() == b:getID() end
 local function getCondition(part) return part:getCondition() end
 
 VE.addPartWatcher("Door", hasDoor, getDoorOpen, { on = "DoorOpened", off = "DoorClosed", world = true })
@@ -554,7 +571,8 @@ VE.addPartWatcher("DoorLock", hasDoor, getDoorLocked, { on = "DoorLocked", off =
 VE.addPartWatcher("Window", hasWindow, getWindowSmashed, { on = "WindowSmashed", off = "WindowRepaired", world = true })
 VE.addPartWatcher("WindowOpen", hasWindow, getWindowOpen, { on = "WindowOpened", off = "WindowClosed", world = true })
 VE.addPartWatcher("TireFlat", isTire, getTireFlat, { on = "TireWentFlat", off = "TireInflated", world = true, slow = true })
-VE.addPartWatcher("Part", isInstallable, getInstalledItem, { on = "PartInstalled", off = "PartRemoved", world = true, slow = true })
+VE.addPartWatcher("Part", isInstallable, getInstalledItem,
+    { on = "PartInstalled", off = "PartRemoved", world = true, slow = true, same = isSameItem })
 VE.addPartWatcher("PartCondition", isInstallable, getCondition, { world = true, slow = true })
 
 loadingBuiltIns = false

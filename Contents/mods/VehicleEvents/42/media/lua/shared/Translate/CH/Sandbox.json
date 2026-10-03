@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "低油量 (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "油量低於此值時觸發 FuelLow。油量重新高於此值 + 5%% 時觸發 FuelNoLongerLow。",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "低電量 (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "電池電量低於此值時觸發 BatteryLow。電量重新高於此值 + 5%% 時觸發 BatteryNoLongerLow。",
+    "Sandbox_VehicleEvents_FlippedAngle": "翻車角度 (度)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "車輛傾斜超過此角度時觸發 Flipped(90 = 側翻,180 = 車頂朝下)。傾斜重新低於此角度 - 25 時觸發 BackOnWheels。",
+    "Sandbox_VehicleEvents_WorldCheckMs": "世界檢查間隔 (毫秒)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "兩次檢查所有已載入車輛之間的時間,用於世界事件。越低 = 事件越快,伺服器負擔越重。",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "每 tick 檢查車輛數",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "一次世界檢查每個遊戲 tick 處理的車輛數量。越低 = 車輛多的伺服器上越流暢,但完整檢查耗時更長。"
+}

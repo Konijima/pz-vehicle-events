@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Vähän polttoainetta (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Tämän rajan alapuolella laukeaa FuelLow. FuelNoLongerLow laukeaa, kun taso on taas yli tämän arvon + 5 %%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Heikko akku (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Tämän varauksen alapuolella laukeaa BatteryLow. BatteryNoLongerLow laukeaa, kun varaus on taas yli tämän arvon + 5 %%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Kaatumiskulma (astetta)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Ajoneuvo, joka on kallistunut tätä kulmaa enemmän, laukaisee Flipped (90 = kyljellään, 180 = katollaan). BackOnWheels laukeaa, kun kallistus on taas alle tämän kulman - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Maailman tarkistusväli (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Aika kahden tarkistuksen välillä, joissa käydään läpi kaikki ladatut ajoneuvot maailmatapahtumia varten. Pienempi = nopeammat tapahtumat, enemmän työtä palvelimelle.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Ajoneuvoja per tick (maailman tarkistus)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Montako ajoneuvoa maailman tarkistus käsittelee pelitickiä kohden. Pienempi = sulavampi palvelimilla, joilla on paljon ajoneuvoja, mutta koko tarkistus kestää kauemmin."
+}

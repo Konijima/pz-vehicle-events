@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Kevés üzemanyag (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Ez alatt a szint alatt a FuelLow aktiválódik. A FuelNoLongerLow akkor aktiválódik, amikor újra ez az érték + 5%% fölé kerül.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Gyenge akkumulátor (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Ez alatt a töltöttség alatt a BatteryLow aktiválódik. A BatteryNoLongerLow akkor aktiválódik, amikor újra ez az érték + 5%% fölé kerül.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Felborulási szög (fok)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Az ennél a szögnél jobban megdőlt jármű a Flipped eseményt váltja ki (90 = az oldalán, 180 = a tetején). A BackOnWheels akkor aktiválódik, amikor újra e szög - 25 alá kerül.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Világellenőrzés gyakorisága (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Két ellenőrzés közti idő, amely az összes betöltött járművet vizsgálja a világeseményekhez. Kisebb = gyorsabb események, több munka a szervernek.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Járművek tickenként (világellenőrzés)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Hány járművet dolgoz fel egy világellenőrzés játéktickenként. Kisebb = egyenletesebb a sok járművel rendelkező szervereken, de egy teljes ellenőrzés tovább tart."
+}

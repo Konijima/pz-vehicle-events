@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Combustibil puțin (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Sub acest nivel se declanșează FuelLow. FuelNoLongerLow se declanșează când nivelul trece din nou peste această valoare + 5%%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Baterie slabă (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Sub această încărcare se declanșează BatteryLow. BatteryNoLongerLow se declanșează când încărcarea trece din nou peste această valoare + 5%%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Unghi de răsturnare (grade)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Un vehicul înclinat mai mult decât acest unghi declanșează Flipped (90 = pe o parte, 180 = pe acoperiș). BackOnWheels se declanșează când revine sub acest unghi - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Interval de verificare a lumii (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Timpul dintre două verificări ale tuturor vehiculelor încărcate, pentru evenimentele lumii. Mai mic = evenimente mai rapide, mai multă muncă pentru server.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Vehicule pe tick (verificarea lumii)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Câte vehicule procesează o verificare a lumii pe tick de joc. Mai mic = mai fluid pe serverele cu multe vehicule, dar o verificare completă durează mai mult."
+}

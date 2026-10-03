@@ -1,0 +1,7 @@
+name=Vehicle Events API - Test
+id=VehicleEventsTest
+description=Automatic in-game test of every Vehicle Events API event. Not for the Workshop.
+author=Konijima
+require=\VehicleEvents
+versionMin=42.21
+modversion=1.0.0

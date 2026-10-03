@@ -1,9 +1,9 @@
 {
     "Sandbox_VehicleEvents": "Vehicle Events API",
-    "Sandbox_VehicleEvents_FuelLowPercent": "Low fuel (%)",
-    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Fuel below this fires FuelLow. FuelNoLongerLow fires once it is 5% above again.",
-    "Sandbox_VehicleEvents_BatteryLowPercent": "Low battery (%)",
-    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Battery charge below this fires BatteryLow. BatteryNoLongerLow fires once it is 5% above again.",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Low fuel (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Fuel below this fires FuelLow. FuelNoLongerLow fires once it is 5%% above again.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Low battery (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Battery charge below this fires BatteryLow. BatteryNoLongerLow fires once it is 5%% above again.",
     "Sandbox_VehicleEvents_FlippedAngle": "Flipped angle (degrees)",
     "Sandbox_VehicleEvents_FlippedAngle_tooltip": "A car tilted more than this from upright fires Flipped (90 = on its side, 180 = on its roof). BackOnWheels fires once it is back under this angle minus 25.",
     "Sandbox_VehicleEvents_WorldCheckMs": "World check interval (ms)",

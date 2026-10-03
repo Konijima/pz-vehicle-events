@@ -132,9 +132,11 @@ end
 local function scanWorldVehicles()
     -- nobody listens to world events: dont scan, start fresh when someone does
     if VE.sideListeners.world == 0 then
-        if next(VE.worldSeen) then
+        -- Kahlua has no next(), so a loop that stops at the first entry
+        for _ in pairs(VE.worldSeen) do
             VE.worldStates = {}
             VE.worldSeen = {}
+            break
         end
         if VE.worldBatchIndex ~= 0 then
             -- dropped mid scan: let go of the cars left in the list

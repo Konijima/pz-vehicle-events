@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Lavt brændstof (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Under dette niveau udløses FuelLow. FuelNoLongerLow udløses, når det igen er over denne værdi + 5 %%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Lavt batteri (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Under denne opladning udløses BatteryLow. BatteryNoLongerLow udløses, når den igen er over denne værdi + 5 %%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Væltevinkel (grader)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Et køretøj, der hælder mere end denne vinkel, udløser Flipped (90 = på siden, 180 = på taget). BackOnWheels udløses, når det igen er under denne vinkel - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Interval for verdenstjek (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Tid mellem to tjek af alle indlæste køretøjer, til verdens-events. Lavere = hurtigere events, mere arbejde for serveren.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Køretøjer pr. tick (verdenstjek)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Hvor mange køretøjer et verdenstjek behandler pr. spil-tick. Lavere = mere jævnt på servere med mange køretøjer, men et fuldt tjek tager længere tid."
+}

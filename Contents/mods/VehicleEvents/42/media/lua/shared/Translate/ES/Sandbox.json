@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Combustible bajo (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Por debajo de este nivel se activa FuelLow. FuelNoLongerLow se activa cuando vuelve a superar este valor + 5 %%.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Batería baja (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Por debajo de esta carga se activa BatteryLow. BatteryNoLongerLow se activa cuando vuelve a superar este valor + 5 %%.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Ángulo de vuelco (grados)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Un vehículo inclinado más que este ángulo activa Flipped (90 = de lado, 180 = sobre el techo). BackOnWheels se activa cuando vuelve a estar por debajo de este ángulo - 25.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Intervalo de comprobación del mundo (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Tiempo entre dos comprobaciones de todos los vehículos cargados, para los eventos del mundo. Más bajo = eventos más rápidos, más trabajo para el servidor.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Vehículos por tick (comprobación del mundo)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Cuántos vehículos procesa una comprobación del mundo por tick de juego. Más bajo = más fluido en servidores con muchos vehículos, pero una comprobación completa tarda más."
+}

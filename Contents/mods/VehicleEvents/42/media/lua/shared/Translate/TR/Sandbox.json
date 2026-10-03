@@ -1,0 +1,13 @@
+{
+    "Sandbox_VehicleEvents": "Vehicle Events API",
+    "Sandbox_VehicleEvents_FuelLowPercent": "Düşük yakıt (%%)",
+    "Sandbox_VehicleEvents_FuelLowPercent_tooltip": "Yakıt bu seviyenin altına düşünce FuelLow tetiklenir. Tekrar bu değer + %%5'in üstüne çıkınca FuelNoLongerLow tetiklenir.",
+    "Sandbox_VehicleEvents_BatteryLowPercent": "Düşük akü (%%)",
+    "Sandbox_VehicleEvents_BatteryLowPercent_tooltip": "Şarj bu seviyenin altına düşünce BatteryLow tetiklenir. Tekrar bu değer + %%5'in üstüne çıkınca BatteryNoLongerLow tetiklenir.",
+    "Sandbox_VehicleEvents_FlippedAngle": "Devrilme açısı (derece)",
+    "Sandbox_VehicleEvents_FlippedAngle_tooltip": "Bu açıdan fazla yatan bir araç Flipped tetikler (90 = yan yatmış, 180 = ters dönmüş). Tekrar bu açı - 25'in altına inince BackOnWheels tetiklenir.",
+    "Sandbox_VehicleEvents_WorldCheckMs": "Dünya kontrol aralığı (ms)",
+    "Sandbox_VehicleEvents_WorldCheckMs_tooltip": "Dünya olayları için yüklü tüm araçların iki kontrolü arasındaki süre. Düşük = daha hızlı olaylar, sunucuya daha fazla yük.",
+    "Sandbox_VehicleEvents_WorldCarsPerTick": "Tick başına araç (dünya kontrolü)",
+    "Sandbox_VehicleEvents_WorldCarsPerTick_tooltip": "Bir dünya kontrolünün oyun tick'i başına işlediği araç sayısı. Düşük = çok araçlı sunucularda daha akıcı, ama tam kontrol daha uzun sürer."
+}

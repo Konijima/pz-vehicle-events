@@ -1,6 +1,8 @@
 name=Vehicle Events API
 id=VehicleEvents
 description=Mod for modders. Adds Lua events for car changes the game does not report, like the engine starting with W, stalls and alarms.
+poster=poster.png
+icon=icon.png
 author=Konijima
 versionMin=42.21
 modversion=0.1.0
